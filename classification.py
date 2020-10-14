@@ -4,12 +4,15 @@ from time import sleep
 import pandas as pd
 
 data = pickle.load(
-    open('/Users/herbertcordeiro/Documents/tcc/tcc-env/texts.pickle', 'rb'))
+    open('C:/Users/herbe/Documents/TCC/dataset.pickle', 'rb'))
 
 count = 0
 for item in data:
     print('The data', count, 'is', item)
     count += 1
+
+result_classification = []
+tweets = []
 
 class classification(Enum):
     INTERATIVA = 0
@@ -19,21 +22,17 @@ class classification(Enum):
     EXPERIMENTACAO = 4
     REALIZACAO = 5
 
-result = []
-classification_list = []
-
 def get_classification(index):
     lista = [data["interativa"][index], data["normativa"][index], data["suprapessoal"][index],
              data["existencia"][index], data["experimentacao"][index], data["realizacao"][index]]
     i = lista.index(max(lista))
-    classification_list.append(i)
-    return (classification(i), max(lista))
+    # return (i, max(lista))
+    return i
 
 for i in range(len(data["X"])):
-    result.append(get_classification(i))
+    result_classification.append(get_classification(i))
+    tweets.append(data["X"][i])
 
-df = pd.DataFrame(result)
+df = pd.DataFrame(list(zip(result_classification, tweets)), columns=['classificacao','tweets'])
 
-df.to_csv(r'/Users/herbertcordeiro/Documents/tcc/tcc-env/result.csv', header=False)
-
-print(classification_list)
+df.to_csv(r'C:/Users/herbe/Documents/TCC/tcc/dataset.csv', header=True, index=False)
